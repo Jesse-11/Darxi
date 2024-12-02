@@ -1,4 +1,4 @@
-# project-darxi
+# Darxi Networking
 
 🔥 THIS IS A WORK IN PROGRESS (End goal is a real-use exectuable application for buisnesses and individuals).
 
