@@ -1,0 +1,15 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/images">
+        <!-- Image resources would be listed here -->
+        <!-- Example: <file>images/icon.png</file> -->
+    </qresource>
+    <qresource prefix="/styles">
+        <!-- Style sheets would be listed here -->
+        <!-- Example: <file>styles/dark_theme.qss</file> -->
+    </qresource>
+    <qresource prefix="/translations">
+        <!-- Translation files would be listed here -->
+        <!-- Example: <file>translations/app_fr.qm</file> -->
+    </qresource>
+</RCC>
