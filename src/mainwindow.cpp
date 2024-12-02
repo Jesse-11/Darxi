@@ -10,6 +10,7 @@
 #include <QFrame>
 #include <QFont>
 #include <QScrollArea>
+#include "database/databasemanager.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -148,7 +149,7 @@ void MainWindow::createSignupPage()
     mainLayout->setContentsMargins(0, 0, 0, 0);
     mainLayout->setSpacing(0);
 
-    // Logo container with fixed height
+    // Logo container setup
     auto *logoContainer = new QFrame;
     logoContainer->setObjectName("logoContainer");
     logoContainer->setFixedHeight(150);
@@ -159,7 +160,7 @@ void MainWindow::createSignupPage()
     logoLabel->setAlignment(Qt::AlignCenter);
     logoLayout->addWidget(logoLabel);
 
-    // Form container with fixed width
+    // Form container setup
     auto *formContainer = new QFrame;
     formContainer->setObjectName("formContainer");
     formContainer->setFixedWidth(400);
@@ -170,39 +171,44 @@ void MainWindow::createSignupPage()
     auto *titleLabel = new QLabel("Create Account");
     titleLabel->setObjectName("formTitle");
 
-    auto *fullNameInput = new QLineEdit;
-    fullNameInput->setPlaceholderText("Full Name");
-    fullNameInput->setObjectName("loginInput");
-    fullNameInput->setFixedHeight(40);
+    // Initialize member variables with the input fields
+    m_fullNameInput = new QLineEdit(this);
+    m_fullNameInput->setPlaceholderText("Full Name");
+    m_fullNameInput->setObjectName("loginInput");
+    m_fullNameInput->setFixedHeight(40);
 
-    auto *emailInput = new QLineEdit;
-    emailInput->setPlaceholderText("Email Address");
-    emailInput->setObjectName("loginInput");
-    emailInput->setFixedHeight(40);
+    m_emailInput = new QLineEdit(this);
+    m_emailInput->setPlaceholderText("Email Address");
+    m_emailInput->setObjectName("loginInput");
+    m_emailInput->setFixedHeight(40);
 
-    auto *newUsernameInput = new QLineEdit;
-    newUsernameInput->setPlaceholderText("Choose Username");
-    newUsernameInput->setObjectName("loginInput");
-    newUsernameInput->setFixedHeight(40);
+    m_newUsernameInput = new QLineEdit(this);
+    m_newUsernameInput->setPlaceholderText("Choose Username");
+    m_newUsernameInput->setObjectName("loginInput");
+    m_newUsernameInput->setFixedHeight(40);
 
-    auto *newPasswordInput = new QLineEdit;
-    newPasswordInput->setPlaceholderText("Choose Password");
-    newPasswordInput->setEchoMode(QLineEdit::Password);
-    newPasswordInput->setObjectName("loginInput");
-    newPasswordInput->setFixedHeight(40);
+    m_newPasswordInput = new QLineEdit(this);
+    m_newPasswordInput->setPlaceholderText("Choose Password");
+    m_newPasswordInput->setEchoMode(QLineEdit::Password);
+    m_newPasswordInput->setObjectName("loginInput");
+    m_newPasswordInput->setFixedHeight(40);
 
-    auto *confirmPasswordInput = new QLineEdit;
-    confirmPasswordInput->setPlaceholderText("Confirm Password");
-    confirmPasswordInput->setEchoMode(QLineEdit::Password);
-    confirmPasswordInput->setObjectName("loginInput");
-    confirmPasswordInput->setFixedHeight(40);
+    m_confirmPasswordInput = new QLineEdit(this);
+    m_confirmPasswordInput->setPlaceholderText("Confirm Password");
+    m_confirmPasswordInput->setEchoMode(QLineEdit::Password);
+    m_confirmPasswordInput->setObjectName("loginInput");
+    m_confirmPasswordInput->setFixedHeight(40);
 
-    auto *infoText = new QLabel("Password must contain at least 8 characters, including uppercase, lowercase, numbers, and special characters.");
-    infoText->setObjectName("infoText");
-    infoText->setWordWrap(true);
-    infoText->setAlignment(Qt::AlignLeft);
-    infoText->setStyleSheet("font-size: 11px; color: #666;");
+    // Add widgets to form layout with controlled spacing
+    formLayout->addWidget(titleLabel);
+    formLayout->addSpacing(20);
+    formLayout->addWidget(m_fullNameInput);
+    formLayout->addWidget(m_emailInput);
+    formLayout->addWidget(m_newUsernameInput);
+    formLayout->addWidget(m_newPasswordInput);
+    formLayout->addWidget(m_confirmPasswordInput);
 
+    // Add the standard buttons
     auto *signupButton = new QPushButton("Create Account");
     signupButton->setObjectName("primaryButton");
     signupButton->setFixedHeight(40);
@@ -211,15 +217,6 @@ void MainWindow::createSignupPage()
     backToLoginButton->setObjectName("secondaryButton");
     backToLoginButton->setFixedHeight(40);
 
-    // Add widgets to form layout with controlled spacing
-    formLayout->addWidget(titleLabel);
-    formLayout->addSpacing(20);
-    formLayout->addWidget(fullNameInput);
-    formLayout->addWidget(emailInput);
-    formLayout->addWidget(newUsernameInput);
-    formLayout->addWidget(newPasswordInput);
-    formLayout->addWidget(confirmPasswordInput);
-    formLayout->addWidget(infoText);
     formLayout->addSpacing(10);
     formLayout->addWidget(signupButton);
     formLayout->addSpacing(5);
@@ -240,13 +237,6 @@ void MainWindow::createSignupPage()
     // Connect signals
     connect(signupButton, &QPushButton::clicked, this, &MainWindow::handleSignup);
     connect(backToLoginButton, &QPushButton::clicked, this, &MainWindow::switchToLogin);
-
-    // Add enter key navigation
-    connect(fullNameInput, &QLineEdit::returnPressed, emailInput, QOverload<>::of(&QWidget::setFocus));
-    connect(emailInput, &QLineEdit::returnPressed, newUsernameInput, QOverload<>::of(&QWidget::setFocus));
-    connect(newUsernameInput, &QLineEdit::returnPressed, newPasswordInput, QOverload<>::of(&QWidget::setFocus));
-    connect(newPasswordInput, &QLineEdit::returnPressed, confirmPasswordInput, QOverload<>::of(&QWidget::setFocus));
-    connect(confirmPasswordInput, &QLineEdit::returnPressed, this, &MainWindow::handleSignup);
 }
 
 void MainWindow::createDashboardPage()
@@ -384,8 +374,19 @@ void MainWindow::setupStyles()
 
 void MainWindow::handleLogin()
 {
-    // Add authentication logic here
-    m_stackedWidget->setCurrentWidget(m_dashboardPage);
+    QString username = m_usernameInput->text();
+    QString password = m_passwordInput->text();
+    
+    if (username.isEmpty() || password.isEmpty()) {
+        QMessageBox::warning(this, "Login Error", "Please enter both username and password.");
+        return;
+    }
+    
+    if (DatabaseManager::instance().validateCredentials(username, password)) {
+        m_stackedWidget->setCurrentWidget(m_dashboardPage);
+    } else {
+        QMessageBox::warning(this, "Login Error", "Invalid username or password.");
+    }
 }
 
 void MainWindow::switchToSignup()
@@ -400,6 +401,70 @@ void MainWindow::switchToLogin()
 
 void MainWindow::handleSignup()
 {
-    // Add signup logic here
-    m_stackedWidget->setCurrentWidget(m_loginPage);
+    qDebug() << "=== Starting Signup Process ===";
+
+    // Check if input fields exist
+    if (!m_fullNameInput || !m_emailInput || !m_newUsernameInput || 
+        !m_newPasswordInput || !m_confirmPasswordInput) {
+        qDebug() << "Error: One or more input fields are null";
+        QMessageBox::critical(this, "Error", "Application initialization error");
+        return;
+    }
+
+    // Get input values with validation
+    QString fullName = m_fullNameInput->text().trimmed();
+    QString email = m_emailInput->text().trimmed();
+    QString username = m_newUsernameInput->text().trimmed();
+    QString password = m_newPasswordInput->text().trimmed();
+    QString confirmPassword = m_confirmPasswordInput->text().trimmed();
+
+    qDebug() << "Input validation starting...";
+    qDebug() << "Full Name length:" << fullName.length();
+    qDebug() << "Email length:" << email.length();
+    qDebug() << "Username length:" << username.length();
+    qDebug() << "Password length:" << password.length();
+
+    // Validation checks
+    if (fullName.isEmpty() || email.isEmpty() || username.isEmpty() || 
+        password.isEmpty() || confirmPassword.isEmpty()) {
+        qDebug() << "Empty field detected";
+        QMessageBox::warning(this, "Signup Error", "Please fill in all fields.");
+        return;
+    }
+
+    if (password != confirmPassword) {
+        qDebug() << "Password mismatch";
+        QMessageBox::warning(this, "Signup Error", "Passwords do not match.");
+        return;
+    }
+
+    qDebug() << "Attempting database creation...";
+    
+    try {
+        // Check database connection
+        if (!DatabaseManager::instance().isInitialized()) {
+            qDebug() << "Database not initialized";
+            QMessageBox::critical(this, "Error", "Database connection error");
+            return;
+        }
+
+        // Attempt user creation
+        qDebug() << "Calling createUser...";
+        bool success = DatabaseManager::instance().createUser(
+            fullName, email, username, password);
+
+        if (success) {
+            qDebug() << "User created successfully";
+            QMessageBox::information(this, "Success", "Account created successfully!");
+            switchToLogin();
+        } else {
+            qDebug() << "User creation failed";
+            QMessageBox::warning(this, "Signup Error", "Username or email already exists.");
+        }
+    } catch (const std::exception& e) {
+        qDebug() << "Exception caught during signup:" << e.what();
+        QMessageBox::critical(this, "Error", "An unexpected error occurred during signup.");
+    }
+
+    qDebug() << "=== Signup Process Complete ===";
 }

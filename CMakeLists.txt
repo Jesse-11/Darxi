@@ -46,7 +46,7 @@ endfunction()
 ensure_packages_installed()
 
 #find Qt packages
-find_package(Qt6 COMPONENTS Core Network Widgets REQUIRED)
+find_package(Qt6 COMPONENTS Core Network Widgets Sql REQUIRED)
 
 
 #Enable automoc for Qt
@@ -61,10 +61,12 @@ set(RESOURCES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/resources)
 set(SOURCES
     src/main.cpp
     src/mainwindow.cpp
+    src/database/databasemanager.cpp
 )
 # Collect header files
 set(HEADERS
     src/mainwindow.h
+    src/database/databasemanager.h
 )
 # Collect resource files
 set(RESOURCE_FILES
@@ -90,6 +92,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt::Core
     Qt::Widgets
+    Qt::Sql
 )
 
 # Output the Qt installation path for debugging

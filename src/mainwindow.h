@@ -56,6 +56,14 @@ private:
     QLineEdit *m_usernameInput;
     QLineEdit *m_passwordInput;
 
+    //Signup widgets
+    QLineEdit *m_fullNameInput;
+    QLineEdit *m_emailInput;
+    QLineEdit *m_newUsernameInput;
+    QLineEdit *m_newPasswordInput;
+    QLineEdit *m_confirmPasswordInput;
+
+
     //Dashboard widgets
     QTabWidget *m_tabWidget;
     QLabel *m_statusLabel;
