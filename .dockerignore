@@ -1,0 +1,17 @@
+.git
+.gitignore
+build/
+*.o
+*.obj
+*.exe
+*.out
+*.app
+*.dll
+*.so
+*.dylib
+.vscode/
+*.user
+*.autosave
+README.md
+Dockerfile
+docker-compose.yml

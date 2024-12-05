@@ -57,29 +57,33 @@ set(CMAKE_AUTORCC ON)
 set(RESOURCES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/resources)
 
 
-# Collect source files
+# Add source files
 set(SOURCES
     src/main.cpp
-    src/mainwindow.cpp
-    src/database/databasemanager.cpp
+    src/views/mainwindow.cpp
+    src/views/loginview.cpp
+    src/views/signupview.cpp
+    src/views/dashboardview.cpp
+    src/controllers/authcontroller.cpp
+    src/models/user.cpp
+    src/models/database/databasemanager.cpp
+    src/controllers/dashboardcontroller.cpp
 )
-# Collect header files
+
+# Add header files
 set(HEADERS
-    src/mainwindow.h
-    src/database/databasemanager.h
-)
-# Collect resource files
-set(RESOURCE_FILES
-    ${RESOURCES_DIR}/resources.qrc
+    src/views/mainwindow.h
+    src/views/loginview.h
+    src/views/signupview.h
+    src/views/dashboardview.h
+    src/controllers/authcontroller.h
+    src/models/user.h
+    src/models/database/databasemanager.h
+    src/controllers/dashboardcontroller.h
 )
 
-
-# Add executable
-add_executable(${PROJECT_NAME}
-    ${SOURCES}
-    ${HEADERS}
-    ${RESOURCE_FILES}
-)
+# Create executable
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
 # Set include directories
 target_include_directories(${PROJECT_NAME} PRIVATE

@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  darxi-app:
+    build:
+      context: .
+      args:
+        BUILDKIT_INLINE_CACHE: 1
+    container_name: darxi-networking
+    volumes:
+      - .:/app
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    environment:
+      - DISPLAY=${DISPLAY}
+    network_mode: host
