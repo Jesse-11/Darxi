@@ -1,13 +1,34 @@
 # Build directory
 build/
+debug/
+release/
+cmake-build-*/
 
 # Qt-specific
 *.user
+*.user.*
 *.autosave
+*.qmlc
+*.jsc
+*.qm
+.qt/
+.qmake.stash
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
 
 # IDE-specific
-.vscode/.browse.vc.db*
-.vscode/ipch/
+.vscode/
+.idea/
+*.swp
+*.swo
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.browse.vc.db*
+ipch/
 
 # Compiled Object files
 *.slo
@@ -34,3 +55,35 @@ build/
 *.exe
 *.out
 *.app
+Darxi_Networking
+
+# Database files
+*.db
+*.db-journal
+network_dashboard.db
+
+# Docker related
+.docker/
+docker-compose.override.yml
+
+# OS-specific
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Debug logs
+*.log
+debug.log*
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps/
